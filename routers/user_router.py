@@ -1,12 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from starlette.responses import JSONResponse
 
-from models.dto.models import GenericResponse, UserRegister, UserLogin
+from models.dto.models import GenericResponse, UserRegister
 from repository.user_repo import UserRepo
 from utils.db import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
+security = HTTPBasic()
 
 
 # dependency injected in every endpoint handler to facilitate interaction with database
@@ -26,11 +30,12 @@ def get_users(db: UserRepo = Depends(users_repository)):
 @router.post("/register", response_model=GenericResponse)
 def register_user(user: UserRegister, db: UserRepo = Depends(users_repository)):
     # see if a user with the same username already exists
-    existing_user = db.get_users_by_username(user.username)
+    existing_user = db.get_user_by_username(user.username)
     if existing_user:
         return JSONResponse(
             status_code=400,
-            content=jsonable_encoder(GenericResponse(message="User with email or username already registered for given role.")),
+            content=jsonable_encoder(
+                GenericResponse(message="User with email or username already registered for given role.")),
         )
     db.insert_user(user)
     return JSONResponse(
@@ -38,3 +43,22 @@ def register_user(user: UserRegister, db: UserRepo = Depends(users_repository)):
         content=jsonable_encoder(
             GenericResponse(message="User registered successfully.")),
     )
+
+
+def authenticate_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+                      db: UserRepo = Depends(users_repository)):
+    """Authenticate user using Basic Auth."""
+    user = db.get_user_by_username(credentials.username)
+    if not user or not user.password == credentials.password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return user
+
+
+@router.post("/login")
+def login(user: Annotated[dict, Depends(authenticate_user)]):
+    """Login endpoint using Basic Authentication without JWT."""
+    return {"message": "Login successful", "user_id": user.id, "username": user.username}

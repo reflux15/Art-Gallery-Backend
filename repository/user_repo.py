@@ -15,7 +15,7 @@ class UserRepo:
     def get_users_by_role(self, role):
         return self.db_session.query(User).filter(User.role == role).all()
 
-    def get_users_by_username(self, username):
+    def get_user_by_username(self, username):
         return self.db_session.query(User).filter(User.username == username).first()
 
     def get_user_by_id(self, user_id):  # user id is uniques so this query should return a single element always
