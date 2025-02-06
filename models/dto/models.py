@@ -22,3 +22,14 @@ class GenericResponse(BaseModel):
     message: str
 
 
+class CreateArt(BaseModel):
+    name: str
+    description: str
+    category: str
+    type: str
+    author_id: int
+    image: bytes
+
+
+
+
