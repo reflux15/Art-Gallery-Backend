@@ -61,4 +61,4 @@ def authenticate_user(credentials: Annotated[HTTPBasicCredentials, Depends(secur
 @router.post("/login")
 def login(user: Annotated[dict, Depends(authenticate_user)]):
     """Login endpoint using Basic Authentication without JWT."""
-    return {"message": "Login successful", "user_id": user.id, "username": user.username}
+    return {"message": "Login successful", "user_id": user.id, "username": user.username, "role": user.role}
