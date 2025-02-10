@@ -13,7 +13,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 security = HTTPBasic()
 
 
-# dependency injected in every endpoint handler to facilitate interaction with database
+# we need this to interact with the database
 def users_repository(db=Depends(get_db)):
     return UserRepo(db=db)
 

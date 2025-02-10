@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from routers.user_router import router as user_router
+from routers.art_router import router as art_router
 from utils.db import engine, Base
 
 
@@ -16,6 +17,7 @@ def create_app():
         allow_headers=["*"],
     )
     app.include_router(user_router)
+    app.include_router(art_router)
     return app
 
 

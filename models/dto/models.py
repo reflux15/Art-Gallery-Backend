@@ -1,3 +1,4 @@
+from fastapi import UploadFile
 from pydantic import BaseModel
 
 
@@ -24,11 +25,12 @@ class GenericResponse(BaseModel):
 
 class CreateArt(BaseModel):
     name: str
-    description: str
     category: str
-    type: str
+    subject: str
     author_id: int
-    image: bytes
+    image: UploadFile
+
+
 
 
 
