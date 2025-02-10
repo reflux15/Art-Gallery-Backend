@@ -10,22 +10,15 @@ class ArtRepo:
         self.db_session = db
 
     def get_art(self):      # get all art pieces
-        return self.db_session.query(ArtPiece)
-
-    def get_art_by_author(self, author_id):
-        return self.db_session.query(ArtPiece).filter(ArtPiece.author_id == author_id).all()
+        return self.db_session.query(ArtPiece).all()
 
     def insert_art(self, art: CreateArt):
         statement = insert(ArtPiece).values(
-            title=art.title,
-            author_id=art.author_id,
-            description=art.description,
-            creation_date=art.creation_date,
-            price=art.price,
-            currency=art.currency,
-            image=art.image,
+            name=art.name,
             category=art.category,
-            type=art.type,
+            subject=art.subject,
+            artist_name=art.artist_name,
+            file_name=art.file_name,
         )
         self.db_session.execute(statement=statement)
         self.db_session.commit()

@@ -2,8 +2,11 @@ import secrets
 
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi.security import HTTPBasic
+from sqlalchemy import insert
 from starlette.responses import FileResponse
 
+from models.dto.models import CreateArt
+from models.orm.models import ArtPiece
 from repository.art_repo import ArtRepo
 from utils.db import get_db
 
@@ -14,13 +17,19 @@ security = HTTPBasic()
 def art_repository(db=Depends(get_db)):
     return ArtRepo(db=db)
 
-@router.get("/image/{id}")
-async def get_metadata(id: str, db: ArtRepo = Depends(art_repository)):
-    pass
 
-@router.post("/image/{id}")
-async def create_metadata(id: str, db: ArtRepo = Depends(art_repository)):
-    pass
+@router.get("/image/")
+async def get_art(db: ArtRepo = Depends(art_repository)):
+    art =  db.get_art()
+    return art
+
+
+@router.post("/image/")
+async def create_metadata(data: CreateArt, db: ArtRepo = Depends(art_repository)):
+    db.insert_art(data)
+    return {
+        "ok": True
+    }
 
 
 @router.get("/upload/{id}/")

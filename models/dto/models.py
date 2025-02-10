@@ -27,8 +27,8 @@ class CreateArt(BaseModel):
     name: str
     category: str
     subject: str
-    author_id: int
-    image: UploadFile
+    file_name: str
+    artist_name: str
 
 
 

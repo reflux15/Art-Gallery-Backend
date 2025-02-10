@@ -45,15 +45,11 @@ class ArtPiece(Base):
     __tablename__ = "artPieces"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(200), nullable=False)
-    author_id = Column(Integer, ForeignKey("users.id"))
-    description = Column(String(1000))
-    creation_date = Column(DateTime)
-    price = Column(Integer)
-    currency = Column(String(50))   # supported currencies are: EUR, USD, RON
-    image = Column(LargeBinary)     # image is stored as BYTEA column in postgres, only supports small resolution images
-    category = Column(String(50))
-    type = Column(String(50))
+    name = Column(String(200), nullable=False)
+    category = Column(String(200), nullable=False)
+    subject = Column(String(200), nullable=False)
+    artist_name = Column(String(200), nullable=False)
+    file_name = Column(String(200), nullable=False)
 
 
 class ArtistProfile(Base):
