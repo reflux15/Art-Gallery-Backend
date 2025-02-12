@@ -8,11 +8,12 @@ services:
 
   db:
     image: postgres
+    container_name: postgres2
     environment:
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=app
       - POSTGRES_DB=mydbname
-    volumes:
-      - ./postgres/volumes/data/db:/var/lib/postgresql/data
+#    volumes:
+#      - ./postgres/volumes/data/db:/var/lib/postgresql/data
     ports:
        - "5432:5432"
